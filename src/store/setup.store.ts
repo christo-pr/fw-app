@@ -24,14 +24,25 @@ type Step = {
   label: string;
 };
 
+type Company = {
+  name: string;
+};
+
 interface SetupState {
+  complete: boolean;
+  company?: Company;
   currentStep: Step;
   setCurrentStep: (s: Step) => void;
+  setCompany: (c: Company) => void;
+  setComplete: (complete: boolean) => void;
 }
 
 const useSetupStore = create<SetupState>()((set) => ({
+  complete: false,
   currentStep: setupSteps[0],
   setCurrentStep: (s) => set({ currentStep: s }),
+  setCompany: (c) => set({ company: c }),
+  setComplete: (complete) => set({ complete }),
 }));
 
 export default useSetupStore;

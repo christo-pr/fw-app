@@ -19,11 +19,14 @@ import BadgeIcon from "@mui/icons-material/Badge";
 
 // import useAuth from "src/hooks/useAuth"; <---- Cognito login
 import useAuthStore from "src/store/auth.store";
+import useSetupStore from "src/store/setup.store";
 
 export default function Login() {
+  const [companyName, setCompanyName] = useState("Facebook");
   const [email, setEmail] = useState("tim@wintershomeservices.com");
   const [password, setPassword] = useState("ILOVEHVACS");
   const setCurrentUser = useAuthStore((s) => s.setCurrentUser);
+  const setCompany = useSetupStore((s) => s.setCompany);
   // const { signup } = useAuth(); <---- Cognito login
   const handleLogin = useCallback(async () => {
     // This call is not working due to the cognito issues.
@@ -34,7 +37,11 @@ export default function Login() {
       email,
       name: "testing",
     });
-  }, [email, setCurrentUser]);
+    // Fake company data
+    setCompany({
+      name: companyName,
+    });
+  }, [companyName, email, setCompany, setCurrentUser]);
   const options = useMemo(
     () => ({
       bussines: [
@@ -113,10 +120,19 @@ export default function Login() {
           <Typography variant="h4">Join Fieldwork</Typography>
           <Box marginTop={6}>
             <TextField
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              fullWidth
+              label="Company name"
+            />
+            <TextField
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               fullWidth
               label="User Email"
+              sx={{
+                marginTop: 5,
+              }}
             />
             <TextField
               value={password}
