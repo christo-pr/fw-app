@@ -1,3 +1,4 @@
+import { useCallback, useMemo, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -16,17 +17,24 @@ import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import BadgeIcon from "@mui/icons-material/Badge";
 
-import useAuth from "src/hooks/useAuth";
-import { useCallback, useMemo, useState } from "react";
+// import useAuth from "src/hooks/useAuth"; <---- Cognito login
+import useAuthStore from "src/store/auth.store";
 
 export default function Login() {
   const [email, setEmail] = useState("tim@wintershomeservices.com");
   const [password, setPassword] = useState("ILOVEHVACS");
-  const { signup } = useAuth();
+  const setCurrentUser = useAuthStore((s) => s.setCurrentUser);
+  // const { signup } = useAuth(); <---- Cognito login
   const handleLogin = useCallback(async () => {
-    const response = await signup({ email, password });
-    console.log("response: ", response);
-  }, [email, password, signup]);
+    // This call is not working due to the cognito issues.
+    // const response = await signup({ email, password }); <---- Cognito login
+    // Fake the logged state
+    setCurrentUser({
+      id: Math.floor(Math.random() * 10 + 1),
+      email,
+      name: "testing",
+    });
+  }, [email, setCurrentUser]);
   const options = useMemo(
     () => ({
       bussines: [
