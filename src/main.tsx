@@ -1,10 +1,21 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
+import { Amplify } from "aws-amplify";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      userPoolId: "us-east-1_VYhbu8qQw",
+      userPoolClientId: "1qp6qpacl8bgucl56tkkbflt85",
+      identityPoolId: "",
+    },
+  },
+});
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
