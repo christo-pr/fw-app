@@ -17,6 +17,20 @@ export const handlers = [
       { status: 200 }
     );
   }),
+  http.get(`${BASE_API_URL}/organizations/:id`, () => {
+    // ...and respond to them using this JSON response.
+    return HttpResponse.json(
+      {
+        id: "e0ada41d-0d1a-44dd-aa39-5389f7fddefb",
+        organizationName: "Testing org",
+        email: "test@org.com",
+        phone: "555555555",
+        firstName: "Testing",
+        lastName: "Test",
+      },
+      { status: 200 }
+    );
+  }),
   http.put(`${BASE_API_URL}/organizations/:id`, () => {
     // ...and respond to them using this JSON response.
     return HttpResponse.json(
