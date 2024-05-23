@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -8,7 +8,7 @@ import useSetupStore, { setupSteps } from "src/store/setup.store";
 import useOrganizationsAPI from "src/hooks/useOrganizationsAPI";
 
 export const CompanyDetails: React.FC = () => {
-  const { post } = useOrganizationsAPI();
+  const { post, get } = useOrganizationsAPI();
   const setCurrentStep = useSetupStore((s) => s.setCurrentStep);
   const company = useSetupStore((s) => s.company);
   const [form, setForm] = useState<CompanyForm>({
@@ -22,6 +22,17 @@ export const CompanyDetails: React.FC = () => {
     // Then we continue to next step
     setCurrentStep(setupSteps[1]);
   }, [form, post, setCurrentStep]);
+
+  useEffect(() => {
+    async function getCompanyDetails() {
+      const response = await get("102531a9-6239-4899-b742-61ad1ea9117f");
+      console.log("response", response);
+
+      setForm((old) => ({ ...old, name: response.organizationName }));
+    }
+
+    getCompanyDetails();
+  }, []);
 
   return (
     <Box>

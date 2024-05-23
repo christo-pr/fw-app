@@ -1,5 +1,11 @@
 import { useCallback } from "react";
-import { signIn, signUp, signOut } from "aws-amplify/auth";
+import {
+  signIn,
+  signUp,
+  signOut,
+  getCurrentUser,
+  fetchAuthSession,
+} from "aws-amplify/auth";
 
 type LoginDetails = {
   email: string;
@@ -10,6 +16,8 @@ type HookResult = {
   login: (details: LoginDetails) => void;
   signup: (details: LoginDetails) => void;
   logout: () => void;
+  getCurrentUser: () => void;
+  fetchAuthSession: () => void;
 };
 
 export default function useAuth(): HookResult {
@@ -41,5 +49,7 @@ export default function useAuth(): HookResult {
     login,
     signup,
     logout: signOut,
+    getCurrentUser,
+    fetchAuthSession,
   };
 }

@@ -17,31 +17,37 @@ import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import BadgeIcon from "@mui/icons-material/Badge";
 
-// import useAuth from "src/hooks/useAuth"; <---- Cognito login
+import useAuth from "src/hooks/useAuth"; // <---- Cognito login
 import useAuthStore from "src/store/auth.store";
 import useSetupStore from "src/store/setup.store";
 
 export default function Login() {
   const [companyName, setCompanyName] = useState("Facebook");
-  const [email, setEmail] = useState("tim@wintershomeservices.com");
-  const [password, setPassword] = useState("ILOVEHVACS");
+  const [email, setEmail] = useState("cristofer.flort@gmail.com");
+  const [password, setPassword] = useState("$omthingS3cure!");
   const setCurrentUser = useAuthStore((s) => s.setCurrentUser);
   const setCompany = useSetupStore((s) => s.setCompany);
-  // const { signup } = useAuth(); <---- Cognito login
+  const { login, getCurrentUser, fetchAuthSession } = useAuth(); // <---- Cognito login
   const handleLogin = useCallback(async () => {
     // This call is not working due to the cognito issues.
-    // const response = await signup({ email, password }); <---- Cognito login
+    await login({ email, password }); // <---- Cognito login
+
+    const user = (await getCurrentUser()) as any;
+    const session = (await fetchAuthSession()) as any;
+    console.log("session", session);
+
     // Fake the logged state
     setCurrentUser({
-      id: Math.floor(Math.random() * 10 + 1),
-      email,
+      id: user.signInDetails.userId,
+      email: user.signInDetails.loginId,
       name: "testing",
+      token: session.tokens.idToken.toString(),
     });
-    // Fake company data
-    setCompany({
-      name: companyName,
-    });
-  }, [companyName, email, setCompany, setCurrentUser]);
+    // // Fake company data
+    // setCompany({
+    //   name: companyName,
+    // });
+  }, [companyName, email, setCompany, setCurrentUser, password]);
   const options = useMemo(
     () => ({
       bussines: [

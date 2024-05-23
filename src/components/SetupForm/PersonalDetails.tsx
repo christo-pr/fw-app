@@ -36,6 +36,7 @@ export const PersonalDetails: React.FC = () => {
             setForm((old) => ({ ...old, firstName: e.target.value }))
           }
           fullWidth
+          name="name"
           label="First Name"
           sx={{
             marginTop: 5,
