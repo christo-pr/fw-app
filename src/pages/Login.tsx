@@ -9,6 +9,10 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Grid from "@mui/material/Unstable_Grid2";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 /** Icons */
 import AlignHorizontalRightIcon from "@mui/icons-material/AlignHorizontalRight";
 import AirportShuttleIcon from "@mui/icons-material/AirportShuttle";
@@ -19,35 +23,27 @@ import BadgeIcon from "@mui/icons-material/Badge";
 
 import useAuth from "src/hooks/useAuth"; // <---- Cognito login
 import useAuthStore from "src/store/auth.store";
-import useSetupStore from "src/store/setup.store";
 
 export default function Login() {
   const [companyName, setCompanyName] = useState("Facebook");
   const [email, setEmail] = useState("cristofer.flort@gmail.com");
   const [password, setPassword] = useState("$omthingS3cure!");
   const setCurrentUser = useAuthStore((s) => s.setCurrentUser);
-  const setCompany = useSetupStore((s) => s.setCompany);
   const { login, getCurrentUser, fetchAuthSession } = useAuth(); // <---- Cognito login
   const handleLogin = useCallback(async () => {
-    // This call is not working due to the cognito issues.
     await login({ email, password }); // <---- Cognito login
 
-    const user = (await getCurrentUser()) as any;
-    const session = (await fetchAuthSession()) as any;
-    console.log("session", session);
+    const user = await getCurrentUser();
+    const session = await fetchAuthSession();
 
-    // Fake the logged state
     setCurrentUser({
-      id: user.signInDetails.userId,
-      email: user.signInDetails.loginId,
+      id: user.userId as string,
+      email: user.signInDetails?.loginId as string,
       name: "testing",
-      token: session.tokens.idToken.toString(),
+      token: session.tokens?.idToken?.toString() || "",
     });
-    // // Fake company data
-    // setCompany({
-    //   name: companyName,
-    // });
-  }, [companyName, email, setCompany, setCurrentUser, password]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email, password]);
   const options = useMemo(
     () => ({
       bussines: [
@@ -83,8 +79,8 @@ export default function Login() {
   );
 
   return (
-    <Container maxWidth="xl">
-      <Grid container>
+    <Container maxWidth="xl" sx={{ height: "100vh" }}>
+      <Grid container alignItems="center" height="100%">
         {/* Left container */}
         <Grid xs={6}>
           {/* Header ext */}
@@ -123,41 +119,84 @@ export default function Login() {
         </Grid>
         {/* Right container (Form) */}
         <Grid xs={6}>
-          <Typography variant="h4">Join Fieldwork</Typography>
-          <Box marginTop={6}>
-            <TextField
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-              fullWidth
-              label="Company name"
-            />
-            <TextField
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              fullWidth
-              label="User Email"
+          <Card>
+            <CardContent
               sx={{
-                marginTop: 5,
+                paddingX: 10,
+                paddingTop: 5,
               }}
-            />
-            <TextField
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              fullWidth
-              label="Password"
-              type="password"
-              sx={{
-                marginTop: 5,
-              }}
-            />
-          </Box>
-          <Button
-            variant="contained"
-            sx={{ marginTop: 2 }}
-            onClick={() => handleLogin()}
-          >
-            Send
-          </Button>
+            >
+              <Typography variant="h4">Join Fieldwork</Typography>
+              <Box marginTop={6}>
+                <TextField
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  fullWidth
+                  label="Company name"
+                />
+                <Box display="flex" alignItems="center" gap={5}>
+                  <TextField
+                    fullWidth
+                    label="First Name"
+                    sx={{
+                      marginTop: 4,
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Last Name"
+                    sx={{
+                      marginTop: 4,
+                    }}
+                  />
+                </Box>
+                <TextField
+                  fullWidth
+                  label="Phone Number"
+                  sx={{
+                    marginTop: 5,
+                  }}
+                />
+                <TextField
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  fullWidth
+                  label="User Email"
+                  sx={{
+                    marginTop: 5,
+                  }}
+                />
+                <TextField
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  sx={{
+                    marginTop: 5,
+                  }}
+                />
+              </Box>
+              <Box marginTop={3}>
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label={
+                    <>
+                      I agree to Fieldwork’s to <a href="#">Terms of Service</a>
+                    </>
+                  }
+                />
+              </Box>
+              <Button
+                variant="contained"
+                sx={{ marginTop: 2 }}
+                onClick={() => handleLogin()}
+                fullWidth
+              >
+                Create account
+              </Button>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </Container>

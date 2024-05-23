@@ -16,8 +16,8 @@ type HookResult = {
   login: (details: LoginDetails) => void;
   signup: (details: LoginDetails) => void;
   logout: () => void;
-  getCurrentUser: () => void;
-  fetchAuthSession: () => void;
+  getCurrentUser: typeof getCurrentUser;
+  fetchAuthSession: typeof fetchAuthSession;
 };
 
 export default function useAuth(): HookResult {

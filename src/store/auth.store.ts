@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 type CurrentUser = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   token: string;
